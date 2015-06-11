@@ -1,0 +1,24 @@
+{
+  "name": "NgPyNeo",
+  "version": "1.0.0",
+  "homepage": "https://github.com/RecuencoJones/NgPyNeo",
+  "authors": [
+    "RecuencoJones <david.recuencogadea@gmail.com>"
+  ],
+  "description": "\"Tests for future PistachoChef\"",
+  "main": "\"index.html\"",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "./webapp/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-router": "~0.2.15",
+    "bootstrap": "~3.3.4",
+    "fontawesome": "~4.3.0"
+  }
+}

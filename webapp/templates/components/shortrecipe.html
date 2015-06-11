@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-md-10 col-xs-12">
+        <span class="recipe-title"><h1>{{ recipe.name }}</h1><i class="text-muted recipe-author">&nbsp;by {{ recipe.user }}</i></span>
+    </div>
+    <div class="col-md-1 col-xs-6">
+        <h4 class="like" ng-class="{'selection': recipe.selected==false}" ng-click="like(recipe.id)">
+            <span class="glyphicon glyphicon-thumbs-up"></span> {{ recipe.likes }}
+        </h4>
+    </div>
+    <div class="col-md-1 col-xs-6">
+        <h4 class="dislike" ng-class="{'selection': recipe.selected==true}" ng-click="dislike(recipe.id)">
+            <span class="glyphicon glyphicon-thumbs-down"></span> {{ recipe.dislikes }}
+        </h4>
+    </div>
+</div>
+<h3>Description:</h3>
+<p>{{ recipe.desc }}</p>
+<h3>Ingredients:</h3>
+<ul>
+    <li ng-repeat="ingr in recipe.ingr">
+        {{ ingr }}
+    </li>
+</ul>
+<div class="row">
+    <ul class="tag-list">
+        <li class="tag-list-element" ng-repeat="tag in recipe.tags">
+            {{ tag }}
+        </li>
+    </ul>
+</div>

@@ -1,14 +1,33 @@
-from flask import Flask, request, redirect, url_for, render_template, session
+from flask import Flask, request, redirect, url_for, render_template, session, jsonify
+from flask.ext.cors import CORS
+from json import dumps, dump
 from chef.models import *
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
-def index():
-    recipes = get_recipes()
-    return render_template('index.html', recipes=recipes)
+sessions = {}
 
-@app.route('/register', methods=['GET', 'POST'])
+cors = CORS(app, resources=r'/api/*', allow_headers='*')
+
+
+@app.route('/api/get_recipes', methods=['GET'])
+def _get_recipes():
+    recipes = get_recipes()
+
+    json = {'recipes': [{
+        "name": recipe['recipe_name'],
+        "desc": recipe['recipe_desc'],
+        "ingr": recipe['recipe_ingr'],
+        "id": recipe['id'],
+        "user": recipe['user_name'],
+        "likes": recipe['likes'],
+        "dislikes": recipe['dislikes'],
+        "tags": recipe['tags']} for recipe in recipes]}
+
+    return jsonify(**json)
+
+
+@app.route('/api/register', methods=['GET', 'POST'])
 def register():
     error = None
     if request.method == 'POST':
@@ -20,13 +39,12 @@ def register():
         if not User(usermail).set_username(username).set_password(password).register():
             error = 'A user with that email already exists.'
         else:
-            # enviar JSON con true
-            return redirect(url_for('login'))
+            return jsonify(response=True)
 
-    # enviar JSON con errores
-    return render_template('register.html', error=error)
+    return jsonify(response=False, error=error)
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route('/api/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
@@ -38,22 +56,26 @@ def login():
         if not user.verify_password(password):
             error = 'Invalid login'
         else:
-            session['usermail'] = user.usermail
-            # enviar JSON con true
-            return redirect(url_for('index'))
+            import uuid
+            token = str(uuid.uuid4()).replace("-", "")
+            ip = request.remote_addr  # use for hashing
+            sessions[token] = user.usermail
+            return jsonify(response=True, token=token)
 
-    # enviar JSON con errores
-    return render_template('login.html', error=error)
+    return jsonify(response=False, error=error)
 
-@app.route('/logout')
+
+@app.route('/api/logout', methods=['POST'])
 def logout():
-    session.pop('usermail', None)
-    # flash('Logged out.')
-    return redirect(url_for('index'))
+    token = request.form['token']
+    sessions.pop(token, None)
+    return jsonify(response=True)
+
 
 @app.route('/add_recipe', methods=['POST'])
 def add_recipe():
-    user = User(session['usermail'])
+    token = request.form['token']
+    user = User(sessions[token])
     name = request.form['name']
     tags = request.form['tags']
     desc = request.form['desc']
@@ -63,20 +85,40 @@ def add_recipe():
 
     return redirect(url_for('index'))
 
-@app.route('/like_recipe/<recipe_id>')
+
+@app.route('/api/does_like/<recipe_id>', methods=['POST'])
+def _does_like(recipe_id):
+    token = request.form['token']
+    usermail = sessions[token]
+
+    try:
+        selected = does_like(usermail, recipe_id)
+        json = {'response': selected[0]['like']}
+        return jsonify(**json)
+    except:
+        return jsonify(response=None)
+
+
+@app.route('/api/like_recipe/<recipe_id>', methods=['POST'])
 def like_recipe(recipe_id):
-    usermail = session.get('usermail')
+    token = request.form['token']
+    usermail = sessions[token]
 
-    User(usermail).like_recipe(recipe_id)
+    try:
+        User(usermail).like_recipe(recipe_id)
+        return jsonify(response=True)
+    except:
+        return jsonify(response=False)
 
-    # flash('Liked post.')
-    return redirect(request.referrer)
 
-@app.route('/dislike_recipe/<recipe_id>')
+@app.route('/api/dislike_recipe/<recipe_id>', methods=['POST'])
 def dislike_recipe(recipe_id):
-    usermail = session.get('usermail')
+    token = request.form['token']
+    print(token)
+    usermail = sessions[token]
 
-    User(usermail).dislike_recipe(recipe_id)
-
-    # flash('Liked post.')
-    return redirect(request.referrer)
+    try:
+        User(usermail).dislike_recipe(recipe_id)
+        return jsonify(response=True)
+    except:
+        return jsonify(response=False)
