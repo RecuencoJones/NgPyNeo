@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+    {% if session.usermail %}
+    <p>Logged in as {{ session.usermail }}</p> <a href="{{ url_for('logout') }}">logout</a>
+
+    <form method="post" action="{{ url_for('add_recipe') }}">
+
+        <input name="name" placeholder="Recipe name" type="text"/>
+        <input name="desc" placeholder="Recipe description" type="text"/>
+        <input name="ingr" placeholder="Comma separated ingredients" type="text"/>
+        <input name="tags" placeholder="Comma separated tags" type="text"/>
+        <button type="submit">Send</button>
+
+    </form>
+
+    {% include "display_recipes.html" %}
+
+    {% else %}
+        <a href="{{ url_for('register') }}">register</a>
+        <a href="{{ url_for('login') }}">login</a>
+    {% endif %}
+
+</body>
+</html>

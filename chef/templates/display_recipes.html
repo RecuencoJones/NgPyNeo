@@ -1,0 +1,15 @@
+<ul>
+    {% for recipe in recipes %}
+    <li>
+        <h3>{{ recipe.recipe_name }} Likes: {{ recipe.likes }} Dislikes: {{ recipe.dislikes }}</h3>
+        <h4>by {{ recipe.user_name }}</h4>
+        <p>{{ ', '.join(recipe.recipe_ingr) }}</p>
+        <p>{{ recipe.recipe_desc }}</p>
+        <p>{{ ', '.join(recipe.tags) }}</p>
+        <a href="{{ url_for('like_recipe', recipe_id=recipe.id) }}">like</a>
+        <a href="{{ url_for('dislike_recipe', recipe_id=recipe.id) }}">dislike</a>
+    </li>
+    {% else %}
+        <li>There aren't any recipes yet</li>
+    {% endfor %}
+</ul>
