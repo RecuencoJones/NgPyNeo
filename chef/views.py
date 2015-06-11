@@ -58,8 +58,8 @@ def login():
         else:
             import uuid
             token = str(uuid.uuid4()).replace("-", "")
-            ip = request.remote_addr  # use for hashing
-            sessions[token] = user.usermail
+            ip = str(request.remote_addr).replace(".", "")  # use for hashing
+            sessions[ip+token] = user.usermail
             return jsonify(response=True, token=token)
 
     return jsonify(response=False, error=error)
@@ -67,8 +67,9 @@ def login():
 
 @app.route('/api/logout', methods=['POST'])
 def logout():
-    token = request.form['token']
-    sessions.pop(token, None)
+    token = str(request.form['token'])
+    ip = str(request.remote_addr).replace(".", "")
+    sessions.pop(ip+token, None)
     return jsonify(response=True)
 
 
@@ -88,8 +89,7 @@ def add_recipe():
 
 @app.route('/api/does_like/<recipe_id>', methods=['POST'])
 def _does_like(recipe_id):
-    token = request.form['token']
-    usermail = sessions[token]
+    usermail = get_user_from_token(request)
 
     try:
         selected = does_like(usermail, recipe_id)
@@ -101,8 +101,7 @@ def _does_like(recipe_id):
 
 @app.route('/api/like_recipe/<recipe_id>', methods=['POST'])
 def like_recipe(recipe_id):
-    token = request.form['token']
-    usermail = sessions[token]
+    usermail = get_user_from_token(request)
 
     try:
         User(usermail).like_recipe(recipe_id)
@@ -113,12 +112,18 @@ def like_recipe(recipe_id):
 
 @app.route('/api/dislike_recipe/<recipe_id>', methods=['POST'])
 def dislike_recipe(recipe_id):
-    token = request.form['token']
-    print(token)
-    usermail = sessions[token]
+    usermail = get_user_from_token(request)
 
     try:
         User(usermail).dislike_recipe(recipe_id)
         return jsonify(response=True)
     except:
         return jsonify(response=False)
+
+
+def get_user_from_token(req):
+    token = str(req.form['token'])
+    ip = str(req.remote_addr).replace(".", "")
+    usermail = sessions[ip+token]
+
+    return usermail

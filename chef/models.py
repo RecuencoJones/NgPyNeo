@@ -46,8 +46,6 @@ class User:
             name=name,
             desc=desc,
             ingr=[x.strip() for x in ingr.lower().split(',')]
-            # timestamp=timestamp()
-            # date=date()
         )
 
         rel = Relationship(user, "PUBLISHED", recipe)
