@@ -8,5 +8,6 @@ angular.module('pistachochef')
         'RECIPES': "/get_recipes",
         'LIKE': "/like_recipe/",
         'DISLIKE': "/dislike_recipe/",
-        'DOES_LIKE': "/does_like/"
+        'DOES_LIKE': "/does_like/",
+        'USER_RECIPES': "/get_user_recipes/"
     });

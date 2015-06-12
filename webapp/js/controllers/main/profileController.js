@@ -1,9 +1,9 @@
 angular.module('pistachochef')
 
-.controller('RecipesCtrl', ['$scope', 'Recipes', function($scope, Recipes){
+.controller('ProfileCtrl', ['$scope', '$stateParams', 'Recipes', function($scope, $stateParams, Recipes){
         $scope.recipes = [];
 
-        Recipes.loadRecipes($scope);
+        Recipes.loadUserRecipes($scope, $stateParams.user);
 
         $scope.like = function(id){
             Recipes.like($scope,id);

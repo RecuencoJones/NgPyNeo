@@ -14,15 +14,15 @@ cors = CORS(app, resources=r'/api/*', allow_headers='*')
 def _get_recipes():
     recipes = get_recipes()
 
-    json = {'recipes': [{
-        "name": recipe['recipe_name'],
-        "desc": recipe['recipe_desc'],
-        "ingr": recipe['recipe_ingr'],
-        "id": recipe['id'],
-        "user": recipe['user_name'],
-        "likes": recipe['likes'],
-        "dislikes": recipe['dislikes'],
-        "tags": recipe['tags']} for recipe in recipes]}
+    json = parse_json(recipes)
+
+    return jsonify(**json)
+
+@app.route('/api/get_user_recipes/<usermail>', methods=['GET'])
+def _get_user_recipes(usermail):
+    recipes = get_user_recipes(usermail)
+
+    json = parse_json(recipes)
 
     return jsonify(**json)
 
@@ -142,3 +142,16 @@ def get_user_from_token(req):
     usermail = sessions[ip+token]
 
     return usermail
+
+
+def parse_json(result_set):
+    return {'recipes': [{
+        "name": recipe['recipe_name'],
+        "desc": recipe['recipe_desc'],
+        "ingr": recipe['recipe_ingr'],
+        "id": recipe['id'],
+        "user": recipe['user_name'],
+        "usermail": recipe['user_mail'],
+        "likes": recipe['likes'],
+        "dislikes": recipe['dislikes'],
+        "tags": recipe['tags']} for recipe in result_set]}

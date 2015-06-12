@@ -55,8 +55,18 @@ angular.module('pistachochef', ['ui.router'])
                 //onEnter: ['Auth', '$state', checkUnauthorized]
             })
 
-            .state('profile', {
-                url: '/profile'
+            .state('me', {
+                url: '/me',
+                templateUrl: 'templates/main/me.html',
+                controller: 'MeCtrl',
+                onEnter: ['Auth', '$state', checkUnauthorized]
+            })
+
+            .state('user_profile', {
+                url: '/profile/{user}',
+                templateUrl: 'templates/main/profile.html',
+                controller: 'ProfileCtrl',
+                onEnter: ['Auth', '$state', checkUnauthorized]
             })
 
             .state('browser', {

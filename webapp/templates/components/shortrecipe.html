@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-10 col-xs-12">
-        <span class="recipe-title"><h1>{{ recipe.name }}</h1><i class="text-muted recipe-author">&nbsp;by {{ recipe.user }}</i></span>
+        <span class="recipe-title"><h1>{{ recipe.name }}</h1><i class="text-muted recipe-author">&nbsp;by <a ng-href="#/profile/{{ recipe.usermail }}">{{ recipe.user }}</a></i></span>
     </div>
     <div class="col-md-1 col-xs-6">
         <h4 class="like" ng-class="{'selection': recipe.selected==false}" ng-click="like(recipe.id)">

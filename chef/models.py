@@ -97,12 +97,34 @@ def get_recipes():
                r.ingr AS recipe_ingr,
                r.id AS id,
                u.username AS user_name,
+               u.usermail AS user_mail,
         COUNT(DISTINCT n) AS likes,
         COUNT(DISTINCT o) AS dislikes,
         COLLECT(DISTINCT t.name) AS tags;
         """
 
     return graph.cypher.execute(query)
+
+
+def get_user_recipes(usermail):
+    query = """
+        MATCH (u:User)-[:PUBLISHED]->(r:Recipe),
+              (t:Tag)-[:TAGGED]->(r)
+        WHERE u.usermail = {usermail}
+        OPTIONAL MATCH (n)-[:LIKED {like:true}]->(r)
+        OPTIONAL MATCH (o)-[:LIKED {like:false}]->(r)
+        RETURN r.name AS recipe_name,
+               r.desc AS recipe_desc,
+               r.ingr AS recipe_ingr,
+               r.id AS id,
+               u.username AS user_name,
+               u.usermail AS user_mail,
+        COUNT(DISTINCT n) AS likes,
+        COUNT(DISTINCT o) AS dislikes,
+        COLLECT(DISTINCT t.name) AS tags;
+        """
+
+    return graph.cypher.execute(query, usermail=usermail)
 
 
 def does_like(usermail, recipe_id):

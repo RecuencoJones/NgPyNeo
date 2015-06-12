@@ -4,13 +4,15 @@ angular.module('pistachochef')
 
         var logged = false;
         var token = null;
+        var user = null;
 
         return ({
             register: register,
             authenticate: authenticate,
             logout: logout,
             isLogged: isLogged,
-            getToken: getToken
+            getToken: getToken,
+            getUser: getUser
         });
 
         function register(username,usermail,password){
@@ -42,7 +44,9 @@ angular.module('pistachochef')
                 if(data.response){
                     logged = true;
                     token = data.token;
+                    user = usermail;
                     localStorage.token = angular.toJson(token);
+                    localStorage.user = angular.toJson(user);
                     $state.go('recipes');
                 }
             });
@@ -53,11 +57,13 @@ angular.module('pistachochef')
             if(token !== null){
                 return logged;
             }else{
-                var tmp = angular.fromJson(localStorage.token);
-                if (tmp !== undefined) {
+                var str1 = angular.fromJson(localStorage.token);
+                var str2 = angular.fromJson(localStorage.user);
+                if (str1 !== null && str1 !== undefined && str2 !== null && str2 !== undefined) {
                     logged = true;
-                    token = tmp;
-                    return tmp;
+                    token = str1;
+                    user = str2;
+                    return logged;
                 }else {
                     return false;
                 }
@@ -76,6 +82,17 @@ angular.module('pistachochef')
                 }
             ).success(function(data){
                 logged = false;
+                token = null;
+                user = null;
+                localStorage.user = angular.toJson(null);
+                localStorage.token = angular.toJson(null);
+
+                $state.go('login');
+            }).error(function(data){
+                logged = false;
+                token = null;
+                user = null;
+                localStorage.user = angular.toJson(null);
                 localStorage.token = angular.toJson(null);
 
                 $state.go('login');
@@ -84,6 +101,10 @@ angular.module('pistachochef')
 
         function getToken(){
             return token;
+        }
+
+        function getUser(){
+            return user;
         }
 
     }]);

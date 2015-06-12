@@ -1,11 +1,12 @@
 <header class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle custom-navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
+                <!--<span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>-->
+                <span class="glyphicon glyphicon-option-vertical"></span>
             </button>
             <a class="navbar-brand" href="#/recipes">PistachoChef</a>
         </div>
@@ -17,8 +18,8 @@
             <ul class="nav navbar-nav navbar-right" ng-show="logged">
                 <li ng-class="{ active: isActive('/recipes')}"><a href="#/recipes"><span class="glyphicon glyphicon-list" title="Recipes"></span>&nbsp;&nbsp;Recipes</a></li>
                 <li ng-class="{ active: isActive('/recipe/create')}"><a href="#/recipe/create"><span class="glyphicon glyphicon-plus" title="Create"></span>&nbsp;&nbsp;Create</a></li>
-                <li ng-class="{ active: isActive('/profile')}"><a href="#/profile"><span class="glyphicon glyphicon-user" title="Profile"></span>&nbsp;&nbsp;Me</a></li>
-                <li><a ng-click="logout()"><span class="glyphicon glyphicon-log-out" title="Logout"></span>&nbsp;&nbsp;Logout</a></li>
+                <li ng-class="{ active: isActive('/me')}"><a href="#/me"><span class="glyphicon glyphicon-user" title="Profile"></span>&nbsp;&nbsp;Me</a></li>
+                <li style="cursor: pointer!important;"><a ng-click="logout()"><span class="glyphicon glyphicon-log-out" title="Logout"></span>&nbsp;&nbsp;Logout</a></li>
             </ul>
         </nav>
     </div>
