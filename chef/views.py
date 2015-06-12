@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, render_template, session, jsonify
+from flask import Flask, request, redirect, url_for, render_template, session, jsonify, abort
 from flask.ext.cors import CORS
 from json import dumps, dump
 from chef.models import *
@@ -67,16 +67,22 @@ def login():
 
 @app.route('/api/logout', methods=['POST'])
 def logout():
-    token = str(request.form['token'])
-    ip = str(request.remote_addr).replace(".", "")
-    sessions.pop(ip+token, None)
+    try:
+        token = str(request.form['token'])
+        ip = str(request.remote_addr).replace(".", "")
+        sessions.pop(ip+token, None)
+    except:
+        abort(401)
     return jsonify(response=True)
 
 
 @app.route('/add_recipe', methods=['POST'])
 def add_recipe():
-    token = request.form['token']
-    user = User(sessions[token])
+    try:
+        usermail = get_user_from_token(request)
+    except:
+        abort(401)
+    user = User(usermail)
     name = request.form['name']
     tags = request.form['tags']
     desc = request.form['desc']
@@ -89,7 +95,10 @@ def add_recipe():
 
 @app.route('/api/does_like/<recipe_id>', methods=['POST'])
 def _does_like(recipe_id):
-    usermail = get_user_from_token(request)
+    try:
+        usermail = get_user_from_token(request)
+    except:
+        abort(401)
 
     try:
         selected = does_like(usermail, recipe_id)
@@ -101,7 +110,10 @@ def _does_like(recipe_id):
 
 @app.route('/api/like_recipe/<recipe_id>', methods=['POST'])
 def like_recipe(recipe_id):
-    usermail = get_user_from_token(request)
+    try:
+        usermail = get_user_from_token(request)
+    except:
+        abort(401)
 
     try:
         User(usermail).like_recipe(recipe_id)
@@ -112,7 +124,10 @@ def like_recipe(recipe_id):
 
 @app.route('/api/dislike_recipe/<recipe_id>', methods=['POST'])
 def dislike_recipe(recipe_id):
-    usermail = get_user_from_token(request)
+    try:
+        usermail = get_user_from_token(request)
+    except:
+        abort(401)
 
     try:
         User(usermail).dislike_recipe(recipe_id)

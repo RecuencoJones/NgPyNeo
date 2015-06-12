@@ -1,0 +1,34 @@
+<navbar></navbar>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="jumbotron">
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class=" glyphicon glyphicon-search"></span>
+                            </span>
+                            <input class="form-control" type="text" ng-model="filter" placeholder="Filter recipes">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-md-offset-3">
+                    <a href="#/recipe/create" class="btn btn-success btn-block">Create recipe</a>
+                </div>
+            </div>
+            <br>
+            <div class="list-group list-change">
+                <li class="list-group-item list-group-item-hover list-change" ng-repeat="recipe in recipes | orderBy: '-likes' | filter:filter">
+                    <shortrecipe></shortrecipe>
+                </li>
+            </div>
+        </div>
+    </div>
+</div>

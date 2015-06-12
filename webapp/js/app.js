@@ -4,7 +4,7 @@ angular.module('pistachochef', ['ui.router'])
 
         function checkAuthorized(auth,$state){
             if(auth.isLogged()){
-                $state.go('home');
+                $state.go('recipes');
             }
         }
 
@@ -30,25 +30,39 @@ angular.module('pistachochef', ['ui.router'])
                 onEnter: ['Auth','$state', checkAuthorized]
             })
 
-            .state('home', {
-                url: '/home',
-                templateUrl: 'templates/main/home.html',
-                controller: 'HomeCtrl',
-                onEnter: ['Auth','$state', checkUnauthorized]
-            })
-
             .state('recipes', {
-
+                url: '/recipes',
+                templateUrl: 'templates/main/recipes.html',
+                controller: 'RecipesCtrl',
+                onEnter: ['Auth','$state', checkUnauthorized]
             })
 
             .state('recipe', {
 
             })
 
+            .state('recipe_create', {
+                url: '/recipe/create',
+                templateUrl: 'templates/main/recipe_create.html',
+                controller: 'RecipeCreateCtrl',
+                onEnter: ['Auth', '$state', checkUnauthorized]
+            })
+
+            .state('recipe_edit', {
+                //url: '/recipe/edit/{id}',
+                //templateUrl: 'templates/main/recipe_edit.html',
+                //controller: 'RecipeEditCtrl',
+                //onEnter: ['Auth', '$state', checkUnauthorized]
+            })
+
+            .state('profile', {
+                url: '/profile'
+            })
+
             .state('browser', {
 
             });
 
-        $urlRouterProvider.otherwise('home');
+        $urlRouterProvider.otherwise('recipes');
 
     }]);

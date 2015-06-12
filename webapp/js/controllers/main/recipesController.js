@@ -1,6 +1,6 @@
 angular.module('pistachochef')
 
-.controller('HomeCtrl', ['$scope', 'Recipes', function($scope, Recipes){
+.controller('RecipesCtrl', ['$scope', 'Recipes', function($scope, Recipes){
         $scope.recipes = [];
 
         Recipes.loadRecipes($scope);

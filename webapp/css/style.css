@@ -1,4 +1,5 @@
-body { padding-top: 75px; }
+body { padding-top: 75px;}
+footer {margin-bottom: 0 !important;}
 .like {color: #00A000}
 .dislike {color: #A00000}
 .selection {color: #c4c4c4}

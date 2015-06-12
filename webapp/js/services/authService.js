@@ -43,7 +43,7 @@ angular.module('pistachochef')
                     logged = true;
                     token = data.token;
                     localStorage.token = angular.toJson(token);
-                    $state.go('home');
+                    $state.go('recipes');
                 }
             });
         }
